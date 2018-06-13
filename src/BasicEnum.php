@@ -5,7 +5,7 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  * @author    Daniel Kopf
  */
-namespace Meiko\Authentication\Helper;
+namespace Meiko\Helper;
 
 use ReflectionClass;
 
