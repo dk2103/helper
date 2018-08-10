@@ -8,7 +8,6 @@
 namespace Meiko\Helper;
 
 use Logger;
-require_once 'vendor/apache/log4php/main/php/Logger.php';
 
 class Log
 {
@@ -17,70 +16,78 @@ class Log
 
     private $isLoaded;
 
+    public function __construct()
+    {
+        $this->isLoaded = false;
+        $logger = null;
+    }
+
     public function trace(string $key, string $message)
     {
-        if (! $isLoaded)
+        if (! $this->isLoaded)
             $this->loadConfig();
-        $logger->trace($this->format($key, $message));
+        $this->logger->trace($this->format($key, $message));
     }
 
     public function debug(string $key, string $message)
     {
-        if (! $isLoaded)
+        if (! $this->isLoaded)
             $this->loadConfig();
-        $logger->debug($this->format($key, $message));
+        $this->logger->debug($this->format($key, $message));
     }
 
     public function info(string $key, string $message)
     {
-        if (! $isLoaded)
+        if (! $this->isLoaded)
             $this->loadConfig();
-        $logger->info(self::format($key, $message));
+        $this->logger->info(self::format($key, $message));
     }
 
     public function warn(string $key, string $message)
     {
-        if (! $isLoaded)
+        if (! $this->isLoaded)
             $this->loadConfig();
-        $logger->warn(self::format($key, $message));
+        $this->logger->warn(self::format($key, $message));
     }
 
     public function error(string $key, string $message)
     {
-        if (! $isLoaded)
+        if (! $this->isLoaded)
             $this->loadConfig();
-        $logger->error(self::format($key, $message));
+        $this->logger->error(self::format($key, $message));
     }
 
     public function fatal(string $key, string $message)
     {
-        if (! $isLoaded)
+        if (! $this->isLoaded)
             $this->loadConfig();
-        $logger->fatal(self::format($key, $message));
+        $this->logger->fatal(self::format($key, $message));
     }
 
     private function loadConfig()
     {
-        if (isset(ConfigReader::read('logging', 'file'))) {
-            Logger::configure(ConfigReader::read('logging', 'file'));
-        } else
-            loadTempalteConfig();
+        $config = ConfigReader::read('logging', 'file');
 
-        self::$logger = Logger::getLogger('bla');
-        self::$isLoaded = true;
+        if (! $config) {
+            Logger::configure($config);
+        } else
+            $this->loadTempalteConfig();
+
+        $this->logger = Logger::getLogger('bla');
+        $this->isLoaded = true;
     }
 
     private function loadTempalteConfig()
     {
-        $template = dirname(__FILE__) . "template.xml";
-        if (! file_exists($tempalte)) {
+        $template = dirname(__FILE__) . "/templates/template.xml";
+        if (! file_exists($template)) {
             throw new \Exception("Keine Konfiguration und kein default template vorhanden in " . static::class);
         }
 
         Logger::configure();
     }
 
-    private static function format($key, $message)
+    private function format($key, $message)
     {
         return '| ' . $key . ' | ' . $message;
     }
