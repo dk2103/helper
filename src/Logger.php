@@ -1,6 +1,6 @@
 <?php
 /**
- * @link      https://github.com/dk2103/helper
+ * @link      https://github.com/dk2103/auth-template
  * @copyright Copyright (c) 2018 MEIKO Maschinenbau GmbH & Co. KG
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  * @author    Daniel Kopf
@@ -8,6 +8,7 @@
 namespace Meiko\Helper;
 
 use Logger;
+require_once 'vendor/apache/log4php/main/php/Logger.php';
 
 class Log
 {
@@ -16,79 +17,70 @@ class Log
 
     private $isLoaded;
 
-    public function __construct()
-    {
-        $this->isLoaded = false;
-        $logger = null;
-    }
-
     public function trace(string $key, string $message)
     {
-        if (! $this->isLoaded)
+        if (! $isLoaded)
             $this->loadConfig();
-        $this->logger->trace($this->format($key, $message));
+        $logger->trace($this->format($key, $message));
     }
 
     public function debug(string $key, string $message)
     {
-        if (! $this->isLoaded)
+        if (! $isLoaded)
             $this->loadConfig();
-        $this->logger->debug($this->format($key, $message));
+        $logger->debug($this->format($key, $message));
     }
 
     public function info(string $key, string $message)
     {
-        if (! $this->isLoaded)
+        if (! $isLoaded)
             $this->loadConfig();
-        $this->logger->info(self::format($key, $message));
+        $logger->info(self::format($key, $message));
     }
 
     public function warn(string $key, string $message)
     {
-        if (! $this->isLoaded)
+        if (! $isLoaded)
             $this->loadConfig();
-        $this->logger->warn(self::format($key, $message));
+        $logger->warn(self::format($key, $message));
     }
 
     public function error(string $key, string $message)
     {
-        if (! $this->isLoaded)
+        if (! $isLoaded)
             $this->loadConfig();
-        $this->logger->error(self::format($key, $message));
+        $logger->error(self::format($key, $message));
     }
 
     public function fatal(string $key, string $message)
     {
-        if (! $this->isLoaded)
+        if (! $isLoaded)
             $this->loadConfig();
-        $this->logger->fatal(self::format($key, $message));
+        $logger->fatal(self::format($key, $message));
     }
 
     private function loadConfig()
     {
-        $config = ConfigReader::read('logging', 'file');
-
-        if (! $config) {
-            Logger::configure($config);
+        if (isset(ConfigReader::read('logging', 'file'))) {
+            Logger::configure(ConfigReader::read('logging', 'file'));
         } else
-            $this->loadTempalteConfig();
+            loadTempalteConfig();
 
-        $this->logger = Logger::getLogger('bla');
-        $this->isLoaded = true;
+        self::$logger = Logger::getLogger('bla');
+        self::$isLoaded = true;
     }
 
     private function loadTempalteConfig()
     {
         $template = dirname(__FILE__) . "/../templates/template.xml";
         if (! file_exists($template)) {
-            echo $template;
-            throw new \Exception("Keine Konfiguration und kein default Template vorhanden in " . static::class);
+            throw new \Exception("Keine Konfiguration und kein default template vorhanden in " . static::class);
         }
 
         Logger::configure();
     }
 
-    private function format($key, $message)
+    private static function format($key, $message)
     {
         return '| ' . $key . ' | ' . $message;
     }
