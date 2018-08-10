@@ -79,9 +79,10 @@ class Log
 
     private function loadTempalteConfig()
     {
-        $template = dirname(__FILE__) . "/templates/template.xml";
+        $template = dirname(__FILE__) . "/../templates/template.xml";
         if (! file_exists($template)) {
-            throw new \Exception("Keine Konfiguration und kein default template vorhanden in " . static::class);
+            echo $template;
+            throw new \Exception("Keine Konfiguration und kein default Template vorhanden in " . static::class);
         }
 
         Logger::configure();
