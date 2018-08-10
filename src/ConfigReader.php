@@ -1,6 +1,6 @@
 <?php
 /**
- * @link      https://github.com/dk2103/auth-template
+ * @link      https://github.com/dk2103/helper
  * @copyright Copyright (c) 2018 MEIKO Maschinenbau GmbH & Co. KG
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  * @author    Daniel Kopf
@@ -58,5 +58,10 @@ class ConfigReader
         } catch (\Zend\Config\Exception\RuntimeException $e) {
             return false;
         }
+    }
+
+    public static function getConfigFile()
+    {
+        return dirname(__FILE__) . "/../../../../config/meiko.config.ini";
     }
 }
