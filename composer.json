@@ -6,7 +6,7 @@
     "minimum-stability" : "stable",
     "require": {
         "php": ">=7.0.0",
-        "zendframework/zend-config": "^3.2",
+        "zendframework/zend-config": "^2.6",
         "apache/log4php": "^2.3"
     },
     "require-dev": {
